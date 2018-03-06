@@ -134,6 +134,7 @@ FloatString operator+=(FloatString &fs1, const FloatString &fs2) {
 
 istream &operator>>(istream &input, FloatString &f) {
     char key;
+    f.floatStr = "";
     f.count = 0;
     f.point = 0;
     f.minus = false;
@@ -164,6 +165,12 @@ istream &operator>>(istream &input, FloatString &f) {
         if (f.count == 1 && f.floatStr[0] == '-') {
             f.count = 0;
             f.floatStr = "";
+        } else if (f.count == 2 && f.floatStr[0] == '-' && f.floatStr[1] == '0') {
+            f.floatStr[0] = '0';
+            f.floatStr[1] = '\0';
+        } else if (f.floatStr[f.count - 1] == '.') {
+            f.floatStr[f.count - 1] = '\0';
+            f.count--;
         } else {
             f.floatStr[f.count] = '\0';
             f.count++;
@@ -194,6 +201,78 @@ ostream &operator<<(ostream &output, FloatString &f) {
 
 int FloatString::GetCount() {
     return count;
+}
+
+void menu() {
+    FloatString s;
+    char c, k;
+    do {
+        printf("Введите:"
+                       "\n\t'1' - ввод числа;"
+                       "\n\t'2' - вывод числа;"
+                       "\n\t'3' - прибавить единицу;"
+                       "\n\t'4' - прибавить отличное от 1 число;"
+                       "\n\t'5' - выход.\n");
+        c = getchar();
+        fflush(stdin);
+        switch (c) {
+            case '1':
+                cin >> s;
+                break;;
+            case '2':
+                cout << s;
+                break;;
+            case '3':
+                s++;
+                break;;
+            case '4':
+                if (s.GetCount() != 0) {
+                    FloatString s1 = s;
+                    printf("Укажите, каким способом задать второе число:"
+                                   "\n\t'1' - ввод;"
+                                   "\n\t'2' - копирование.\n");
+                    k = getchar();
+                    fflush(stdin);
+                    switch (k) {
+                        case '1':
+                            cin >> s1;
+                            cout << s1;
+                            break;;
+                        case '2':
+                            cout << s1;
+                            break;;
+                        default:
+                            printf("Введен неверный символ!\n");
+                            break;;
+                    }
+                    if (k == '1' || k == '2') {
+                        if (s1.GetCount() != 0) {
+                            printf("Выберите операцию:"
+                                           "\n\t'1' - '+';"
+                                           "\n\t'2' - '+='.\n");
+                            k = getchar();
+                            fflush(stdin);
+                            if (k == '1') {
+                                printf("Выбрана операция '+'.\n");
+                                s + s1;
+                            } else if (k == '2') {
+                                printf("Выбрана операция '+='.\n");
+                                s += s1;
+                            } else
+                                printf("Вы ввели неверный символ!\n");
+                        } else
+                            printf("Произошла ошибка! Возможно, возникла проблема со вводом второго числа.\n");
+                    }
+                } else
+                    printf("Число еще не введено!\n");
+                break;;
+            case '5':
+                break;;
+            default:
+                printf("Введен неверный символ!\n");
+                break;;
+        }
+    } while (c != '5');
 }
 
 

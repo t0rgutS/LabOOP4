@@ -25,6 +25,10 @@ public:
     void operator+(const FloatString &fs1);
 
     friend FloatString operator+=(FloatString &fs1, const FloatString &fs2);
+
+    friend void menu();
 };
+
+void menu();
 
 #endif
